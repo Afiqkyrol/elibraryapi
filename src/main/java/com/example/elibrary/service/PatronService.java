@@ -151,6 +151,7 @@ public class PatronService {
         if(search_by.equals("title")){
             List<DtMonographCatalogRegistration> first = dtMonographCatalogRegistrationRepository.findByTagAndData(13, title);
             List<DtMonographCatalogRegistration> second = dtMonographCatalogRegistrationRepository.findByTagAndData(21, monograph_type);
+//            List<DtMonographCatalogRegistration> result = new ArrayList<>();
 
             List<Integer> list = new ArrayList<>();
 
@@ -161,19 +162,19 @@ public class PatronService {
                     DtMonographCatalogRegistration aSecond = second.get(j);
 
                     if(aFirst.getCatreg_mono_reg_id() == aSecond.getCatreg_mono_reg_id()){
-                        list.add(aSecond.getCatreg_mono_reg_id());
+                        list.add(aFirst.getCatreg_mono_reg_id());
                     }
                 }
             }
 
-            Integer[] array = list.toArray(new Integer[0]);
-            HashSet<Integer> set = new HashSet<>(Arrays.asList(array));
-            Integer[] result = set.toArray(new Integer[set.size()]);
-            ArrayList<Integer> newList = new ArrayList<>(Arrays.asList(array));
+//            Integer[] array = list.toArray(new Integer[0]);
+//            HashSet<Integer> set = new HashSet<>(Arrays.asList(array));
+//            Integer[] result = set.toArray(new Integer[set.size()]);
+//            ArrayList<Integer> newList = new ArrayList<>(Arrays.asList(array));
             List<DtMonographRegistration> dtMonographRegistrations = new ArrayList<>();
 
-            for(int k = 0; k< newList.size(); k++){
-                int aList = newList.get(k);
+            for(int k = 0; k< list.size(); k++){
+                int aList = list.get(k);
                 dtMonographRegistrations.add(dtMonographRegistrationRepository.findByBookId(aList));
             }
 
@@ -193,19 +194,19 @@ public class PatronService {
                     DtMonographCatalogRegistration aSecond = second.get(j);
 
                     if(aFirst.getCatreg_mono_reg_id() == aSecond.getCatreg_mono_reg_id()){
-                        list.add(aSecond.getCatreg_mono_reg_id());
+                        list.add(aFirst.getCatreg_mono_reg_id());
                     }
                 }
             }
 
-            Integer[] array = list.toArray(new Integer[0]);
-            HashSet<Integer> set = new HashSet<>(Arrays.asList(array));
-            Integer[] result = set.toArray(new Integer[set.size()]);
-            ArrayList<Integer> newList = new ArrayList<>(Arrays.asList(array));
+//            Integer[] array = list.toArray(new Integer[0]);
+//            HashSet<Integer> set = new HashSet<>(Arrays.asList(array));
+//            Integer[] result = set.toArray(new Integer[set.size()]);
+//            ArrayList<Integer> newList = new ArrayList<>(Arrays.asList(array));
             List<DtMonographRegistration> dtMonographRegistrations = new ArrayList<>();
 
-            for(int k = 0; k< newList.size(); k++){
-                int aList = newList.get(k);
+            for(int k = 0; k< list.size(); k++){
+                int aList = list.get(k);
                 dtMonographRegistrations.add(dtMonographRegistrationRepository.findByBookId(aList));
             }
 
@@ -223,19 +224,19 @@ public class PatronService {
                     DtMonographCatalogRegistration aSecond = second.get(j);
 
                     if(aFirst.getCatreg_mono_reg_id() == aSecond.getCatreg_mono_reg_id()){
-                        list.add(aSecond.getCatreg_mono_reg_id());
+                        list.add(aFirst.getCatreg_mono_reg_id());
                     }
                 }
             }
 
-            Integer[] array = list.toArray(new Integer[0]);
-            HashSet<Integer> set = new HashSet<>(Arrays.asList(array));
-            Integer[] result = set.toArray(new Integer[set.size()]);
-            ArrayList<Integer> newList = new ArrayList<>(Arrays.asList(array));
+//            Integer[] array = list.toArray(new Integer[0]);
+//            HashSet<Integer> set = new HashSet<>(Arrays.asList(array));
+//            Integer[] result = set.toArray(new Integer[set.size()]);
+//            ArrayList<Integer> newList = new ArrayList<>(Arrays.asList(array));
             List<DtMonographRegistration> dtMonographRegistrations = new ArrayList<>();
 
-            for(int k = 0; k< newList.size(); k++){
-                int aList = newList.get(k);
+            for(int k = 0; k< list.size(); k++){
+                int aList = list.get(k);
                 dtMonographRegistrations.add(dtMonographRegistrationRepository.findByBookId(aList));
             }
 

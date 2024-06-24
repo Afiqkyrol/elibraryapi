@@ -8,6 +8,7 @@ import com.example.elibrary.entity.DtMonographRegistration;
 import com.example.elibrary.service.PatronService;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -46,12 +47,31 @@ public class PatronController {
         return patronService.getAllBooks();
     }
 
+    @GetMapping("/patron/book-list-details")
+    public List<MonographDetails> getAllBooksDetails(){
+        List<DtMonographRegistration> book_list = patronService.getAllBooks();
+        List<MonographDetails> book_list_details = new ArrayList<>();
+        for(int i = 0; i<book_list.size(); i++){
+            DtMonographRegistration book = book_list.get(i);
+            MonographDetails book_details = patronService.getMonographDetails(book.getReg_id());
+            book_list_details.add(book_details);
+        }
+        return book_list_details;
+    }
+
     @CrossOrigin(origins = "http://localhost:3000")
     @PostMapping("/patron/book-list/search-books")
-    public List<DtMonographRegistration> getSearchBookResult(@RequestParam("search_by") String search_by, @RequestParam("title") String title,
+    public List<MonographDetails> getSearchBookResult(@RequestParam("search_by") String search_by, @RequestParam("title") String title,
                                                               @RequestParam("monograph_type") String monograph_type){
 
-        return patronService.getSearchBookResult(search_by, title, monograph_type);
+        List<DtMonographRegistration> book_list = patronService.getSearchBookResult(search_by, title, monograph_type);
+        List<MonographDetails> book_list_details = new ArrayList<>();
+        for(int i = 0; i<book_list.size(); i++){
+            DtMonographRegistration book = book_list.get(i);
+            MonographDetails book_details = patronService.getMonographDetails(book.getReg_id());
+            book_list_details.add(book_details);
+        }
+        return book_list_details;
     }
 
     @CrossOrigin(origins = "http://localhost:3000")
