@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -33,6 +34,18 @@ public class LibrarianController {
     @GetMapping("/librarian/book-list")
     public List<DtMonographRegistration> getAllBooks(){
         return librarianService.getAllBooks();
+    }
+
+    @GetMapping("/librarian/book-list-details")
+    public List<MonographDetails> getAllBooksDetails(){
+        List<DtMonographRegistration> book_list = librarianService.getAllBooks();
+        List<MonographDetails> book_list_details = new ArrayList<>();
+        for(int i = 0; i<book_list.size(); i++){
+            DtMonographRegistration book = book_list.get(i);
+            MonographDetails book_details = librarianService.getMonographDetails(book.getReg_id());
+            book_list_details.add(book_details);
+        }
+        return book_list_details;
     }
 
     @CrossOrigin(origins = "http://localhost:3000")
