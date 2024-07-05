@@ -658,8 +658,20 @@ public class LibrarianService {
     public DtMonographRegistration updateMonographRegistration(int reg_id, MultipartFile file, String title, String description, String reg_featured, String reg_publish, String reg_ebook, String status) throws IOException {
 
         byte[] bytes = file.getBytes();
-        String path = "src/main/java/com/example/elibrary/uploads"+ File.separator + file.getOriginalFilename();
-        file.transferTo(Path.of(path));
+
+        // Creating the directory to store file
+        String rootPath = System.getProperty("catalina.home");
+        File dir = new File(rootPath + File.separator + "elibrary"+ File.separator +"book cover page");
+        if (!dir.exists())
+            dir.mkdirs();
+
+        // Create the file on server
+        File serverFile = new File(dir.getAbsolutePath()
+                + File.separator + file.getOriginalFilename());
+        BufferedOutputStream stream = new BufferedOutputStream(
+                new FileOutputStream(serverFile));
+        stream.write(bytes);
+        stream.close();
 
         DtMonographRegistration dtMonographRegistration = dtMonographRegistrationRepository.findByBookId(reg_id);
         dtMonographRegistration.setReg_featured(reg_featured);

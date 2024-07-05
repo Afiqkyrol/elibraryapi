@@ -10,16 +10,16 @@ public class StUserRole {
 
     @Id
     @Column(name = "id")
-    private int id;
+    private Integer id;
 
     @Column(name = "user_guid")
     private String user_guid;
 
     @Column(name = "role_id")
-    private int role_id;
+    private Integer role_id;
 
     @Column(name = "module_id")
-    private int module_id;
+    private Integer module_id;
 
     @Column(name = "approved_by")
     private String approved_by;
@@ -28,11 +28,11 @@ public class StUserRole {
     private Date approved_date;
 
     @Column(name = "status")
-    private int status;
+    private Integer status;
 
     public StUserRole(){}
 
-    public StUserRole(int id, String user_guid, int role_id, int module_id, String approved_by, Date approved_date, int status) {
+    public StUserRole(Integer id, String user_guid, Integer role_id, Integer module_id, String approved_by, Date approved_date, Integer status) {
         this.id = id;
         this.user_guid = user_guid;
         this.role_id = role_id;
@@ -42,11 +42,11 @@ public class StUserRole {
         this.status = status;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -58,19 +58,19 @@ public class StUserRole {
         this.user_guid = user_guid;
     }
 
-    public int getRole_id() {
+    public Integer getRole_id() {
         return role_id;
     }
 
-    public void setRole_id(int role_id) {
+    public void setRole_id(Integer role_id) {
         this.role_id = role_id;
     }
 
-    public int getModule_id() {
+    public Integer getModule_id() {
         return module_id;
     }
 
-    public void setModule_id(int module_id) {
+    public void setModule_id(Integer module_id) {
         this.module_id = module_id;
     }
 
@@ -90,11 +90,11 @@ public class StUserRole {
         this.approved_date = approved_date;
     }
 
-    public int getStatus() {
+    public Integer getStatus() {
         return status;
     }
 
-    public void setStatus(int status) {
+    public void setStatus(Integer status) {
         this.status = status;
     }
 }
