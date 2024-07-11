@@ -5,7 +5,9 @@ import com.example.elibrary.entity.DtMonographBooking;
 import com.example.elibrary.entity.DtMonographCatalogRegistration;
 import com.example.elibrary.entity.DtMonographHistoryStatus;
 import com.example.elibrary.entity.DtMonographRegistration;
+import com.example.elibrary.repository.DtMonographCatalogRegistrationRepository;
 import com.example.elibrary.service.PatronService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -73,6 +75,31 @@ public class PatronController {
         }
         return book_list_details;
     }
+
+//    @Autowired
+//    private DtMonographCatalogRegistrationRepository dtMonographCatalogRegistrationRepository;
+//
+//    @CrossOrigin(origins = "http://localhost:3000")
+//    @PostMapping("/patron/book-list/search-books/test")
+//    public String getSearchBookResultTest(@RequestParam("search_by") String search_by, @RequestParam("title") String title,
+//                                                      @RequestParam("monograph_type") String monograph_type){
+//
+//        try{
+//            String book_list = patronService.getSearchBookResulttest(search_by, title, monograph_type);
+////            List<MonographDetails> book_list_details = new ArrayList<>();
+////            for(int i = 0; i<book_list.size(); i++){
+////                DtMonographRegistration book = book_list.get(i);
+////                MonographDetails book_details = patronService.getMonographDetails(book.getReg_id());
+////                book_list_details.add(book_details);
+////            }
+////            return book_list_details.toString();
+////            return dtMonographCatalogRegistrationRepository.findByTagAndDataTest().toString();
+//            return book_list;
+//        }catch (Exception e){
+//            return e.toString();
+//        }
+//
+//    }
 
     @CrossOrigin(origins = "http://localhost:3000")
     @GetMapping("/patron/book-list/{reg_id}")

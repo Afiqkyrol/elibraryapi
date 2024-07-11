@@ -32,4 +32,6 @@ public interface DtMonographCatalogRegistrationRepository extends JpaRepository<
     @Query("SELECT b FROM DtMonographCatalogRegistration b WHERE b.catreg_tag= :catreg_tag AND b.catreg_data LIKE %:catreg_data%")
     List<DtMonographCatalogRegistration> findByTagAndData(@Param("catreg_tag") int catreg_tag, @Param("catreg_data") String catreg_data);
 
+    @Query("SELECT b FROM DtMonographCatalogRegistration b WHERE b.catreg_tag= 14 AND b.catreg_data LIKE '%hamid%'")
+    List<DtMonographCatalogRegistration> findByTagAndDataTest();
 }

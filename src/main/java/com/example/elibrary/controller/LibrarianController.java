@@ -315,6 +315,12 @@ public class LibrarianController {
     }
 
     @CrossOrigin(origins = "http://localhost:3000")
+    @GetMapping("/librarian/lt-mono-cat")
+    public List<LtMonographCataloging> getLtMonographCat(){
+        return librarianService.getLtMonoCat();
+    }
+
+    @CrossOrigin(origins = "http://localhost:3000")
     @GetMapping("/librarian/monograph-list/marctag/{mono_id}")
     public List<DtMonographCatalogRegistration> getMonographMarcTag(@PathVariable int mono_id){
         return librarianService.getMarcTag(mono_id);

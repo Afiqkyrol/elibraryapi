@@ -218,13 +218,13 @@ public class PatronService {
             List<Integer> list = new ArrayList<>();
 
             for(int i = 0; i< first.size(); i++){
-                DtMonographCatalogRegistration aFirst = first.get(i);
+//                DtMonographCatalogRegistration aFirst = first.get(i);
 
                 for(int j = 0; j<second.size(); j++){
-                    DtMonographCatalogRegistration aSecond = second.get(j);
+//                    DtMonographCatalogRegistration aSecond = second.get(j);
 
-                    if(aFirst.getCatreg_mono_reg_id() == aSecond.getCatreg_mono_reg_id()){
-                        list.add(aFirst.getCatreg_mono_reg_id());
+                    if(first.get(i).getCatreg_mono_reg_id() == second.get(j).getCatreg_mono_reg_id()){
+                        list.add(first.get(i).getCatreg_mono_reg_id());
                     }
                 }
             }
@@ -243,6 +243,124 @@ public class PatronService {
             return dtMonographRegistrations;
         }
 
+//        if(search_by.equals("title")){
+//
+//            return dtMonographRegistrationRepository.searchBookByTitle(title);
+//
+//        }else if (search_by.equals("book_id")){
+//
+//            return dtMonographRegistrationRepository.searchBookByBookId(Integer.parseInt(title));
+//
+//        }else if (search_by.equals("author")){
+//
+//            return dtMonographRegistrationRepository.searchBookByAuthorId(Integer.parseInt(title));
+//
+//        }else{
+//            return dtMonographRegistrationRepository.searchBookByPublisherId(Integer.parseInt(title));
+//        }
+    }
+
+    public String getSearchBookResulttest(String search_by, String title, String monograph_type){
+        try {
+
+
+            if (search_by.equals("title")) {
+                List<DtMonographCatalogRegistration> first = dtMonographCatalogRegistrationRepository.findByTagAndData(13, title);
+                List<DtMonographCatalogRegistration> second = dtMonographCatalogRegistrationRepository.findByTagAndData(21, monograph_type);
+//            List<DtMonographCatalogRegistration> result = new ArrayList<>();
+
+                List<Integer> list = new ArrayList<>();
+
+                for (int i = 0; i < first.size(); i++) {
+                    DtMonographCatalogRegistration aFirst = first.get(i);
+
+                    for (int j = 0; j < second.size(); j++) {
+                        DtMonographCatalogRegistration aSecond = second.get(j);
+
+                        if (aFirst.getCatreg_mono_reg_id() == aSecond.getCatreg_mono_reg_id()) {
+                            list.add(aFirst.getCatreg_mono_reg_id());
+                        }
+                    }
+                }
+
+//            Integer[] array = list.toArray(new Integer[0]);
+//            HashSet<Integer> set = new HashSet<>(Arrays.asList(array));
+//            Integer[] result = set.toArray(new Integer[set.size()]);
+//            ArrayList<Integer> newList = new ArrayList<>(Arrays.asList(array));
+                List<DtMonographRegistration> dtMonographRegistrations = new ArrayList<>();
+
+                for (int k = 0; k < list.size(); k++) {
+                    int aList = list.get(k);
+                    dtMonographRegistrations.add(dtMonographRegistrationRepository.findByBookId(aList));
+                }
+
+                return dtMonographRegistrations.toString();
+            } else if (search_by.equals("book_id")) {
+                return dtMonographRegistrationRepository.searchBookByBookId(Integer.parseInt(title)).toString();
+            } else if (search_by.equals("author")) {
+                List<DtMonographCatalogRegistration> first = dtMonographCatalogRegistrationRepository.findByTagAndData(11, title);
+                List<DtMonographCatalogRegistration> second = dtMonographCatalogRegistrationRepository.findByTagAndData(21, monograph_type);
+
+                List<Integer> list = new ArrayList<>();
+
+                for (int i = 0; i < first.size(); i++) {
+                    DtMonographCatalogRegistration aFirst = first.get(i);
+
+                    for (int j = 0; j < second.size(); j++) {
+                        DtMonographCatalogRegistration aSecond = second.get(j);
+
+                        if (aFirst.getCatreg_mono_reg_id() == aSecond.getCatreg_mono_reg_id()) {
+                            list.add(aFirst.getCatreg_mono_reg_id());
+                        }
+                    }
+                }
+
+//            Integer[] array = list.toArray(new Integer[0]);
+//            HashSet<Integer> set = new HashSet<>(Arrays.asList(array));
+//            Integer[] result = set.toArray(new Integer[set.size()]);
+//            ArrayList<Integer> newList = new ArrayList<>(Arrays.asList(array));
+                List<DtMonographRegistration> dtMonographRegistrations = new ArrayList<>();
+
+                for (int k = 0; k < list.size(); k++) {
+                    int aList = list.get(k);
+                    dtMonographRegistrations.add(dtMonographRegistrationRepository.findByBookId(aList));
+                }
+
+                return dtMonographRegistrations.toString();
+            } else {
+                List<DtMonographCatalogRegistration> first = dtMonographCatalogRegistrationRepository.findByTagAndData(14, title);
+                List<DtMonographCatalogRegistration> second = dtMonographCatalogRegistrationRepository.findByTagAndData(21, monograph_type);
+
+                List<Integer> list = new ArrayList<>();
+
+                for (int i = 0; i < first.size(); i++) {
+//                DtMonographCatalogRegistration aFirst = first.get(i);
+
+                    for (int j = 0; j < second.size(); j++) {
+//                    DtMonographCatalogRegistration aSecond = second.get(j);
+
+                        if (first.get(i).getCatreg_mono_reg_id() == second.get(j).getCatreg_mono_reg_id()) {
+                            list.add(first.get(i).getCatreg_mono_reg_id());
+                        }
+                    }
+                }
+
+//            Integer[] array = list.toArray(new Integer[0]);
+//            HashSet<Integer> set = new HashSet<>(Arrays.asList(array));
+//            Integer[] result = set.toArray(new Integer[set.size()]);
+//            ArrayList<Integer> newList = new ArrayList<>(Arrays.asList(array));
+                List<DtMonographRegistration> dtMonographRegistrations = new ArrayList<>();
+
+                for (int k = 0; k < list.size(); k++) {
+                    int aList = list.get(k);
+                    dtMonographRegistrations.add(dtMonographRegistrationRepository.findByBookId(aList));
+                }
+
+                return list.toString();
+            }
+        }catch (Exception e){
+            return e.toString();
+        }
 //        if(search_by.equals("title")){
 //
 //            return dtMonographRegistrationRepository.searchBookByTitle(title);

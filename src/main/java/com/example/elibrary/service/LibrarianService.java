@@ -946,4 +946,8 @@ public class LibrarianService {
         return ltMonographStsRepository.findAll();
     }
 
+    public List<LtMonographCataloging> getLtMonoCat(){
+        return ltMonographCatalogingRepository.findAll();
+    }
+
 }
