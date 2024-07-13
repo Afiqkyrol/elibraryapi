@@ -765,6 +765,10 @@ public class LibrarianService {
         return dtAuthorRepository.findAll();
     }
 
+    public DtAuthor getAuthorById(int authorId){
+        return dtAuthorRepository.findByAuthorId(authorId);
+    }
+
     public List<DtPublisher> getPublisherList(){
         return dtPublisherRepository.findAll();
     }
@@ -779,8 +783,30 @@ public class LibrarianService {
         return dtAuthorRepository.save(author);
     }
 
+    public DtAuthor updateAuthor(int author_id, String name, String email, String telephone, int publisher_id){
+        DtAuthor author = dtAuthorRepository.findByAuthorId(author_id);
+        author.setAuthor_name(name);
+        author.setAuthor_email(email);
+        author.setAuthor_telephone(telephone);
+        author.setPublisher_id(publisher_id);
+
+        return dtAuthorRepository.save(author);
+    }
+
     public DtPublisher savePublisher(String publisher_name, String publisher_address1, String publisher_address2, String publisher_address3, String publisher_telephone, String publisher_email){
         DtPublisher publisher = new DtPublisher();
+        publisher.setPublisher_name(publisher_name);
+        publisher.setPublisher_address1(publisher_address1);
+        publisher.setPublisher_address2(publisher_address2);
+        publisher.setPublisher_address3(publisher_address3);
+        publisher.setPublisher_telephone(publisher_telephone);
+        publisher.setPublisher_email(publisher_email);
+
+        return dtPublisherRepository.save(publisher);
+    }
+
+    public DtPublisher updatePublisher(int publisher_id, String publisher_name, String publisher_address1, String publisher_address2, String publisher_address3, String publisher_telephone, String publisher_email){
+        DtPublisher publisher = dtPublisherRepository.findByPublisherId(publisher_id);
         publisher.setPublisher_name(publisher_name);
         publisher.setPublisher_address1(publisher_address1);
         publisher.setPublisher_address2(publisher_address2);

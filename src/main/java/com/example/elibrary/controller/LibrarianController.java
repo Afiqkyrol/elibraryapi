@@ -352,8 +352,14 @@ public class LibrarianController {
 
     @CrossOrigin(origins = "http://localhost:3000")
     @GetMapping("/librarian/monograph/author")
-    public List<DtAuthor> getAuthor(){
+    public List<DtAuthor> getAuthorList(){
         return librarianService.getAuthor();
+    }
+
+    @CrossOrigin(origins = "http://localhost:3000")
+    @GetMapping("/librarian/monograph/author/{author_id}")
+    public DtAuthor getAuthor(@PathVariable int author_id){
+        return librarianService.getAuthorById(author_id);
     }
 
     @CrossOrigin(origins = "http://localhost:3000")
@@ -363,6 +369,16 @@ public class LibrarianController {
                                        @RequestParam("author_telephone") String author_telephone,
                                        @RequestParam("publisher_id") int publisher_id){
         return librarianService.saveAuthor(author_name, author_email, author_telephone, publisher_id);
+    }
+
+    @CrossOrigin(origins = "http://localhost:3000")
+    @PutMapping("/librarian/monograph/author/{author_id}")
+    public DtAuthor updateAuthor(@PathVariable int author_id,
+                                 @RequestParam("author_name") String author_name,
+                              @RequestParam("author_email") String author_email,
+                              @RequestParam("author_telephone") String author_telephone,
+                              @RequestParam("publisher_id") int publisher_id){
+        return librarianService.updateAuthor(author_id, author_name, author_email, author_telephone, publisher_id);
     }
 
     @CrossOrigin(origins = "http://localhost:3000")
@@ -381,6 +397,19 @@ public class LibrarianController {
                                     @RequestParam("publisher_email") String publisher_email){
 
         return librarianService.savePublisher(publisher_name, publisher_address1, publisher_address2, publisher_address3, publisher_telephone, publisher_email);
+    }
+
+    @CrossOrigin(origins = "http://localhost:3000")
+    @PostMapping("/librarian/monograph/publisher/{publisher_id}")
+    public DtPublisher setPublisher(@PathVariable int publisher_id,
+                                    @RequestParam("publisher_name") String publisher_name,
+                                    @RequestParam("publisher_address1") String publisher_address1,
+                                    @RequestParam("publisher_address2") String publisher_address2,
+                                    @RequestParam("publisher_address3") String publisher_address3,
+                                    @RequestParam("publisher_telephone") String publisher_telephone,
+                                    @RequestParam("publisher_email") String publisher_email){
+
+        return librarianService.updatePublisher(publisher_id, publisher_name, publisher_address1, publisher_address2, publisher_address3, publisher_telephone, publisher_email);
     }
 
     @CrossOrigin(origins = "http://localhost:3000")
