@@ -401,7 +401,7 @@ public class LibrarianController {
 
     @CrossOrigin(origins = "http://localhost:3000")
     @PostMapping("/librarian/monograph/publisher/{publisher_id}")
-    public DtPublisher setPublisher(@PathVariable int publisher_id,
+    public DtPublisher updatePublisher(@PathVariable int publisher_id,
                                     @RequestParam("publisher_name") String publisher_name,
                                     @RequestParam("publisher_address1") String publisher_address1,
                                     @RequestParam("publisher_address2") String publisher_address2,
