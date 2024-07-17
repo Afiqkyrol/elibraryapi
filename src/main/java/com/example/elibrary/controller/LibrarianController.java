@@ -382,9 +382,21 @@ public class LibrarianController {
     }
 
     @CrossOrigin(origins = "http://localhost:3000")
+    @DeleteMapping("/librarian/monograph/author/{author_id}")
+    public void deleteAuthor(@PathVariable int author_id){
+        librarianService.deleteAuthor(author_id);
+    }
+
+    @CrossOrigin(origins = "http://localhost:3000")
     @GetMapping("/librarian/monograph/publisher")
     public List<DtPublisher> getPublisher(){
         return librarianService.getPublisherList();
+    }
+
+    @CrossOrigin(origins = "http://localhost:3000")
+    @GetMapping("/librarian/monograph/publisher/{publisher_id}")
+    public DtPublisher getaPublisher(@PathVariable int publisher_id){
+        return librarianService.getPublisherById(publisher_id);
     }
 
     @CrossOrigin(origins = "http://localhost:3000")
@@ -400,7 +412,7 @@ public class LibrarianController {
     }
 
     @CrossOrigin(origins = "http://localhost:3000")
-    @PostMapping("/librarian/monograph/publisher/{publisher_id}")
+    @PutMapping("/librarian/monograph/publisher/{publisher_id}")
     public DtPublisher updatePublisher(@PathVariable int publisher_id,
                                     @RequestParam("publisher_name") String publisher_name,
                                     @RequestParam("publisher_address1") String publisher_address1,
@@ -410,6 +422,12 @@ public class LibrarianController {
                                     @RequestParam("publisher_email") String publisher_email){
 
         return librarianService.updatePublisher(publisher_id, publisher_name, publisher_address1, publisher_address2, publisher_address3, publisher_telephone, publisher_email);
+    }
+
+    @CrossOrigin(origins = "http://localhost:3000")
+    @DeleteMapping("/librarian/monograph/publisher/{publisher_id}")
+    public void deletePublisher(@PathVariable int publisher_id){
+        librarianService.deletePublisher(publisher_id);
     }
 
     @CrossOrigin(origins = "http://localhost:3000")

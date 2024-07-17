@@ -773,6 +773,10 @@ public class LibrarianService {
         return dtPublisherRepository.findAll();
     }
 
+    public DtPublisher getPublisherById(int publisher_id){
+        return dtPublisherRepository.findByPublisherId(publisher_id);
+    }
+
     public DtAuthor saveAuthor(String name, String email, String telephone, int publisher_id){
         DtAuthor author = new DtAuthor();
         author.setAuthor_name(name);
@@ -791,6 +795,10 @@ public class LibrarianService {
         author.setPublisher_id(publisher_id);
 
         return dtAuthorRepository.save(author);
+    }
+
+    public void deleteAuthor(int author_id){
+        dtAuthorRepository.deleteById(author_id);
     }
 
     public DtPublisher savePublisher(String publisher_name, String publisher_address1, String publisher_address2, String publisher_address3, String publisher_telephone, String publisher_email){
@@ -815,6 +823,10 @@ public class LibrarianService {
         publisher.setPublisher_email(publisher_email);
 
         return dtPublisherRepository.save(publisher);
+    }
+
+    public void deletePublisher(int publisher_id){
+        dtPublisherRepository.deleteById(publisher_id);
     }
 
     public ResponseEntity<Resource> getMonoImage(int mono_id){
