@@ -85,9 +85,15 @@ public class DtMonographRegistration {
     @Column(name = "reg_image_link")
     private String reg_image_link;
 
+    @Column(name = "reg_ebook_path")
+    private String reg_ebook_path;
+
+    @Column(name = "reg_download_count")
+    private Integer reg_download_count;
+
     public DtMonographRegistration(){}
 
-    public DtMonographRegistration(String reg_title, String reg_description, int reg_type, int reg_author_id, int reg_publisher_id, int reg_location_id, int reg_mono_subject, int reg_mono_lang, int reg_mono_cat, String reg_control_no, int copy, String reg_ISBN, String reg_collation, String reg_ddc_call_no, String reg_catalog_notes, String reg_accession_no, int reg_qty, String reg_featured, String reg_registered_by, String reg_publish, String reg_ebook, int reg_status, Date reg_created_date, String reg_image_link) {
+    public DtMonographRegistration(String reg_title, String reg_description, int reg_type, int reg_author_id, int reg_publisher_id, int reg_location_id, int reg_mono_subject, int reg_mono_lang, int reg_mono_cat, String reg_control_no, int copy, String reg_ISBN, String reg_collation, String reg_ddc_call_no, String reg_catalog_notes, String reg_accession_no, int reg_qty, String reg_featured, String reg_registered_by, String reg_publish, String reg_ebook, int reg_status, Date reg_created_date, String reg_image_link, String reg_ebook_path, Integer reg_download_count) {
         this.reg_title = reg_title;
         this.reg_description = reg_description;
         this.reg_type = reg_type;
@@ -112,6 +118,24 @@ public class DtMonographRegistration {
         this.reg_status = reg_status;
         this.reg_created_date = reg_created_date;
         this.reg_image_link = reg_image_link;
+        this.reg_ebook_path = reg_ebook_path;
+        this.reg_download_count = reg_download_count;
+    }
+
+    public Integer getReg_download_count() {
+        return reg_download_count;
+    }
+
+    public void setReg_download_count(Integer reg_download_count) {
+        this.reg_download_count = reg_download_count;
+    }
+
+    public String getReg_ebook_path() {
+        return reg_ebook_path;
+    }
+
+    public void setReg_ebook_path(String reg_ebook_path) {
+        this.reg_ebook_path = reg_ebook_path;
     }
 
     public int getReg_type() {

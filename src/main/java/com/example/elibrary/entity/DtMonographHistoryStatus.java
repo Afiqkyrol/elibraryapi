@@ -50,9 +50,12 @@ public class DtMonographHistoryStatus {
     @Column(name = "history_created_date")
     private Date history_created_date;
 
+    @Column(name = "extend_remarks")
+    private String extend_remarks;
+
     public DtMonographHistoryStatus(){}
 
-    public DtMonographHistoryStatus(int history_mono_id, int history_user_id, int history_librarian_id, Date history_date_borrow, Date history_date_return, int history_status, boolean extend, String extend_status, Date extend_date, String history_late, Date history_actual_rtn_date, Date history_created_date) {
+    public DtMonographHistoryStatus(int history_mono_id, int history_user_id, int history_librarian_id, Date history_date_borrow, Date history_date_return, int history_status, boolean extend, String extend_status, Date extend_date, String history_late, Date history_actual_rtn_date, Date history_created_date, String extend_remarks) {
         this.history_mono_id = history_mono_id;
         this.history_user_id = history_user_id;
         this.history_librarian_id = history_librarian_id;
@@ -65,6 +68,19 @@ public class DtMonographHistoryStatus {
         this.history_late = history_late;
         this.history_actual_rtn_date = history_actual_rtn_date;
         this.history_created_date = history_created_date;
+        this.extend_remarks = extend_remarks;
+    }
+
+    public boolean isExtend() {
+        return extend;
+    }
+
+    public String getExtend_remarks() {
+        return extend_remarks;
+    }
+
+    public void setExtend_remarks(String extend_remarks) {
+        this.extend_remarks = extend_remarks;
     }
 
     public int getHistory_id() {

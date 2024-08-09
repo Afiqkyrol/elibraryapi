@@ -80,14 +80,66 @@ public class LibrarianService {
     @Autowired
     private DtMonographCatalogRegistrationRepository dtMonographCatalogRegistrationRepository;
 
+    @Autowired
+    private DtMonographIsbnAccRepository dtMonographIsbnAccRepository;
+
 
     public List<DtMonographRegistration> getAllBooks(){
-        return dtMonographRegistrationRepository.findAll();
+        return dtMonographRegistrationRepository.findAllbooks();
     }
 
-//    public List<DtMonographCatalogRegistration> getAllBooks(){
-//        return dtMonographRegistrationRepository.findAll();
-//    }
+    public List<DtMonographRegistration> getAllEBooks(){
+        return dtMonographRegistrationRepository.findAllEbooks();
+    }
+
+    public List<DtMonographRegistration> getAllEBooksSearchResult(String category, String title){
+        if(category.equals("title")){
+            List<DtMonographCatalogRegistration> first = dtMonographCatalogRegistrationRepository.findByTagAndData(13, title);
+
+            List<DtMonographRegistration> dtMonographRegistrations = new ArrayList<>();
+
+            for(int k = 0; k< first.size(); k++){
+                int aList = first.get(k).getCatreg_mono_reg_id();
+                dtMonographRegistrations.add(dtMonographRegistrationRepository.findByBookId(aList));
+            }
+
+            return dtMonographRegistrations;
+        }else if(category.equals("accession_no")){
+            List<DtMonographCatalogRegistration> first = dtMonographCatalogRegistrationRepository.findByTagAndData(20, title);
+
+            List<DtMonographRegistration> dtMonographRegistrations = new ArrayList<>();
+
+            for(int k = 0; k< first.size(); k++){
+                int aList = first.get(k).getCatreg_mono_reg_id();
+                dtMonographRegistrations.add(dtMonographRegistrationRepository.findByBookId(aList));
+            }
+
+            return dtMonographRegistrations;
+        }else if(category.equals("author")){
+            List<DtMonographCatalogRegistration> first = dtMonographCatalogRegistrationRepository.findByTagAndData(9, title);
+
+            List<DtMonographRegistration> dtMonographRegistrations = new ArrayList<>();
+
+            for(int k = 0; k< first.size(); k++){
+                int aList = first.get(k).getCatreg_mono_reg_id();
+                dtMonographRegistrations.add(dtMonographRegistrationRepository.findByBookId(aList));
+            }
+
+            return dtMonographRegistrations;
+        }else{
+            List<DtMonographCatalogRegistration> first = dtMonographCatalogRegistrationRepository.findByTagAndData(14, title);
+
+            List<DtMonographRegistration> dtMonographRegistrations = new ArrayList<>();
+
+            for(int k = 0; k< first.size(); k++){
+                int aList = first.get(k).getCatreg_mono_reg_id();
+                dtMonographRegistrations.add(dtMonographRegistrationRepository.findByBookId(aList));
+            }
+
+            return dtMonographRegistrations;
+        }
+    }
+
 
     public List<DtMonographRegistration> getSearchBookResult(String search_by, String title, String monograph_type){
 
@@ -211,6 +263,7 @@ public class LibrarianService {
         AboutMonograph dto = new AboutMonograph();
         dto.setBook_id(reg_id);
         dto.setImage_name(book_details.getReg_image_link());
+        dto.setDtMonographRegistration(book_details);
 
         for(int i = 0; i<dtMonographCatalogRegistrations.size(); i++){
             if(dtMonographCatalogRegistrations.get(i).getCatreg_tag() == 7){
@@ -295,6 +348,10 @@ public class LibrarianService {
        return userRepository.findByUserIc(user_id);
     }
 
+    public User getUserById(int id){
+        return userRepository.findByUserId(id);
+    }
+
     public DtMonographBooking saveReservation(DtMonographBooking dtMonographBooking){
         return dtMonographBookingRepository.save(dtMonographBooking);
     }
@@ -309,6 +366,7 @@ public class LibrarianService {
             DtMonographRegistration dtMonographRegistration = dtMonographRegistrationRepository.findByBookId(aList.getBookingMonoId());
             User aUser = userRepository.findByUserId(aList.getBookingUserId());
             LtMonographBookingSts aLtMonographBookingSts = ltMonographBookingStsRepository.findByStatusId(aList.getBookingStatus());
+            String accession_no = dtMonographCatalogRegistrationRepository.findByMonoIdAndCatalogingId(aList.getBookingMonoId(), 20).getCatreg_data();
 
             DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
             String reserved_date = formatter.format(aList.getBookingDate());
@@ -322,6 +380,40 @@ public class LibrarianService {
             dto.setLibrary_id(aList.getBookingLibrarianId());
             dto.setDate_reserved(reserved_date);
             dto.setStatus(aLtMonographBookingSts.getBooking_sts_status());
+            dto.setAccession_no(accession_no);
+
+            newReservationList.add(dto);
+        }
+
+        return newReservationList;
+    }
+
+    public List<ReservedBook> getReservationListSearch(String acc_num) {
+        int mono_id = getMonoIdByAccessionNo(acc_num);
+        List<DtMonographBooking> aDtMonographBookings = dtMonographBookingRepository.findByMonoId(mono_id);
+        List<ReservedBook> newReservationList = new ArrayList<>();
+
+        for (int i = 0; i < aDtMonographBookings.size(); i++) {
+            DtMonographBooking aList = aDtMonographBookings.get(i);
+
+            DtMonographRegistration dtMonographRegistration = dtMonographRegistrationRepository.findByBookId(aList.getBookingMonoId());
+            User aUser = userRepository.findByUserId(aList.getBookingUserId());
+            LtMonographBookingSts aLtMonographBookingSts = ltMonographBookingStsRepository.findByStatusId(aList.getBookingStatus());
+            String accession_no = dtMonographCatalogRegistrationRepository.findByMonoIdAndCatalogingId(aList.getBookingMonoId(), 20).getCatreg_data();
+
+            DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+            String reserved_date = formatter.format(aList.getBookingDate());
+
+            ReservedBook dto = new ReservedBook();
+            dto.setReserve_id(aList.getBookingId());
+            dto.setBook_id(aList.getBookingMonoId());
+            dto.setBook_title(dtMonographRegistration.getReg_title());
+            dto.setUser_id(aList.getBookingUserId());
+            dto.setUser_name(aUser.getFullName());
+            dto.setLibrary_id(aList.getBookingLibrarianId());
+            dto.setDate_reserved(reserved_date);
+            dto.setStatus(aLtMonographBookingSts.getBooking_sts_status());
+            dto.setAccession_no(accession_no);
 
             newReservationList.add(dto);
         }
@@ -351,10 +443,11 @@ public class LibrarianService {
         return dto;
     }
 
-    public DtMonographBooking updateReservedBookStatus(int reserve_id, Date reserved_date, int status){
+    public DtMonographBooking updateReservedBookStatus(int reserve_id, Date reserved_date, int status, String remark){
         DtMonographBooking dtMonographBooking = dtMonographBookingRepository.findByReserveId(reserve_id);
         dtMonographBooking.setBookingStatus(status);
         dtMonographBooking.setBookingDate(reserved_date);
+        dtMonographBooking.setBookingRemarks(remark);
         return dtMonographBookingRepository.save(dtMonographBooking);
 
     }
@@ -439,10 +532,11 @@ public class LibrarianService {
         return  dto;
     }
 
-    public DtMonographHistoryStatus updateExtendApplicationStatus(int history_id, Date extend_date, String status){
+    public DtMonographHistoryStatus updateExtendApplicationStatus(int history_id, Date extend_date, String status, String remark){
         DtMonographHistoryStatus dtMonographHistoryStatus = dtMonographHistoryStatusRepository.findById(history_id);
         dtMonographHistoryStatus.setExtend_status(status);
         dtMonographHistoryStatus.setExtend_date(extend_date);
+        dtMonographHistoryStatus.setExtend_remarks(remark);
         return dtMonographHistoryStatusRepository.save(dtMonographHistoryStatus);
 
     }
@@ -471,6 +565,41 @@ public class LibrarianService {
             dto.setAct_date_return(aList.getHistory_actual_rtn_date());
             dto.setStatus_book(ltMonographBorrowSts.getBorrow_sts_status());
             dto.setStatus_extend(aList.getExtend_status());
+            dto.setBorrower_id(user.getId());
+            dto.setAccession_no(dtMonographCatalogRegistrationRepository.findByMonoIdAndCatalogingId(aList.getHistory_mono_id(),20).getCatreg_data());
+
+            newBorrowedList.add(dto);
+        }
+
+        return newBorrowedList;
+    }
+
+    public List<BorrowedBook> getHistoryListByWithUserOrCompletedStatusAndMonoId(String acc_number) {
+        int mono_id = getMonoIdByAccessionNo(acc_number);
+        List<DtMonographHistoryStatus> aDtMonographHistoryStatuses = dtMonographHistoryStatusRepository.findByWithUserOrCompletedHistoryStatusAndMonoId(mono_id);
+        List<BorrowedBook> newBorrowedList = new ArrayList<>();
+
+        for (int i = 0; i < aDtMonographHistoryStatuses.size(); i++) {
+            DtMonographHistoryStatus aList = aDtMonographHistoryStatuses.get(i);
+
+            DtMonographRegistration dtMonographRegistration = dtMonographRegistrationRepository.findByBookId(aList.getHistory_mono_id());
+            LtMonographBorrowSts ltMonographBorrowSts = ltMonographBorrowStsRepository.findByStatusId(aList.getHistory_status());
+            User user = userRepository.findByUserId(aList.getHistory_user_id());
+
+
+            BorrowedBook dto = new BorrowedBook();
+            dto.setHistory_id(aList.getHistory_id());
+            dto.setBook_id(aList.getHistory_mono_id());
+            dto.setBook_title(dtMonographRegistration.getReg_title());
+            dto.setCopy(dtMonographRegistration.getCopy());
+            dto.setBorrower(user.getFullName());
+            dto.setDate_borrowed(aList.getHistory_date_borrow());
+            dto.setExtend_date(aList.getExtend_date());
+            dto.setEst_date_to_return(aList.getHistory_date_return());
+            dto.setAct_date_return(aList.getHistory_actual_rtn_date());
+            dto.setStatus_book(ltMonographBorrowSts.getBorrow_sts_status());
+            dto.setStatus_extend(aList.getExtend_status());
+            dto.setBorrower_id(user.getId());
 
             newBorrowedList.add(dto);
         }
@@ -637,6 +766,98 @@ public class LibrarianService {
 
     }
 
+    public DtMonographRegistration setEbookRegistration(MultipartFile file, MultipartFile pdf, String title, String description, String reg_featured, String reg_publish, String reg_ebook, String reg_by, String status){
+
+        try {
+            byte[] bytes = file.getBytes();
+            byte[] pdfbytes = pdf.getBytes();
+
+            // Creating the directory to store file
+            String rootPath = System.getProperty("catalina.home");
+            File dir = new File(rootPath + File.separator + "elibrary"+ File.separator +"book cover page");
+            File pdfdir = new File(rootPath + File.separator + "elibrary"+ File.separator +"ebook pdf");
+            if (!dir.exists()) dir.mkdirs();
+            if (!pdfdir.exists()) pdfdir.mkdirs();
+
+            // Create the file on server
+            File serverFile = new File(dir.getAbsolutePath()
+                    + File.separator + file.getOriginalFilename());
+            File serverPdf = new File(pdfdir.getAbsolutePath()
+                    + File.separator + pdf.getOriginalFilename());
+
+            BufferedOutputStream stream = new BufferedOutputStream(
+                    new FileOutputStream(serverFile));
+            BufferedOutputStream streamPdf = new BufferedOutputStream(
+                    new FileOutputStream(serverPdf));
+
+            stream.write(bytes);
+            streamPdf.write(pdfbytes);
+
+            stream.close();
+            streamPdf.close();
+
+            DtMonographRegistration dtMonographRegistration = new DtMonographRegistration();
+            dtMonographRegistration.setReg_featured(reg_featured);
+            dtMonographRegistration.setReg_title(title);
+            dtMonographRegistration.setReg_description(description);
+            dtMonographRegistration.setReg_registered_by(reg_by);
+            dtMonographRegistration.setReg_publish(reg_publish);
+            dtMonographRegistration.setReg_ebook(reg_ebook);
+            dtMonographRegistration.setReg_status(Integer.parseInt(status));
+            dtMonographRegistration.setReg_image_link(file.getOriginalFilename());
+            dtMonographRegistration.setReg_ebook_path(pdf.getOriginalFilename());
+            dtMonographRegistration.setReg_created_date(new Date());
+            dtMonographRegistration.setReg_download_count(0);
+
+            return dtMonographRegistrationRepository.save(dtMonographRegistration);
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+
+
+    }
+
+    public DtMonographRegistration setEbookRegistrationWithOutImage(MultipartFile pdf, String title, String description, String reg_featured, String reg_publish, String reg_ebook, String reg_by, String status){
+
+        try {
+            byte[] bytes = pdf.getBytes();
+
+            // Creating the directory to store file
+            String rootPath = System.getProperty("catalina.home");
+            File dir = new File(rootPath + File.separator + "elibrary" + File.separator + "ebook pdf");
+            if (!dir.exists())
+                dir.mkdirs();
+
+            // Create the file on server
+            File serverFile = new File(dir.getAbsolutePath()
+                    + File.separator + pdf.getOriginalFilename());
+            BufferedOutputStream stream = new BufferedOutputStream(
+                    new FileOutputStream(serverFile));
+            stream.write(bytes);
+            stream.close();
+
+            DtMonographRegistration dtMonographRegistration = new DtMonographRegistration();
+            dtMonographRegistration.setReg_featured(reg_featured);
+            dtMonographRegistration.setReg_title(title);
+            dtMonographRegistration.setReg_description(description);
+            dtMonographRegistration.setReg_registered_by(reg_by);
+            dtMonographRegistration.setReg_publish(reg_publish);
+            dtMonographRegistration.setReg_ebook(reg_ebook);
+            dtMonographRegistration.setReg_status(Integer.parseInt(status));
+            dtMonographRegistration.setReg_image_link("No_Image_Available.jpg");
+            dtMonographRegistration.setReg_ebook_path(pdf.getOriginalFilename());
+            dtMonographRegistration.setReg_created_date(new Date());
+            dtMonographRegistration.setReg_download_count(0);
+
+            return dtMonographRegistrationRepository.save(dtMonographRegistration);
+        }catch (Exception e){
+            throw new RuntimeException(e);
+        }
+
+    }
+
     public DtMonographRegistration setMonographRegistrationWithOutImage(String title, String description, String reg_featured, String reg_publish, String reg_ebook, String reg_by, String status){
 
         DtMonographRegistration dtMonographRegistration = new DtMonographRegistration();
@@ -685,6 +906,48 @@ public class LibrarianService {
         return dtMonographRegistrationRepository.save(dtMonographRegistration);
     }
 
+    public DtMonographRegistration updateEbookRegistration(int reg_id, MultipartFile pdf, MultipartFile file, String title, String description, String reg_featured, String reg_publish, String reg_ebook, String status) throws IOException {
+
+        byte[] bytes = file.getBytes();
+        byte[] pdfbytes = pdf.getBytes();
+
+        // Creating the directory to store file
+        String rootPath = System.getProperty("catalina.home");
+        File dir = new File(rootPath + File.separator + "elibrary"+ File.separator +"book cover page");
+        File pdfdir = new File(rootPath + File.separator + "elibrary"+ File.separator +"ebook pdf");
+        if (!dir.exists()) dir.mkdirs();
+        if (!pdfdir.exists()) pdfdir.mkdirs();
+
+        // Create the file on server
+        File serverFile = new File(dir.getAbsolutePath()
+                + File.separator + file.getOriginalFilename());
+        File serverPdf = new File(pdfdir.getAbsolutePath()
+                + File.separator + pdf.getOriginalFilename());
+
+        BufferedOutputStream stream = new BufferedOutputStream(
+                new FileOutputStream(serverFile));
+        BufferedOutputStream streamPdf = new BufferedOutputStream(
+                new FileOutputStream(serverPdf));
+
+        stream.write(bytes);
+        streamPdf.write(pdfbytes);
+
+        stream.close();
+        streamPdf.close();
+
+        DtMonographRegistration dtMonographRegistration = dtMonographRegistrationRepository.findByBookId(reg_id);
+        dtMonographRegistration.setReg_featured(reg_featured);
+        dtMonographRegistration.setReg_title(title);
+        dtMonographRegistration.setReg_description(description);
+        dtMonographRegistration.setReg_publish(reg_publish);
+        dtMonographRegistration.setReg_ebook(reg_ebook);
+        dtMonographRegistration.setReg_status(Integer.parseInt(status));
+        dtMonographRegistration.setReg_image_link(file.getOriginalFilename());
+        dtMonographRegistration.setReg_ebook_path(pdf.getOriginalFilename());
+
+        return dtMonographRegistrationRepository.save(dtMonographRegistration);
+    }
+
     public DtMonographRegistration updateMonographRegistrationWithoutImage(int reg_id, String title, String description, String reg_featured, String reg_publish, String reg_ebook, String status) throws IOException {
 
 
@@ -699,14 +962,59 @@ public class LibrarianService {
         return dtMonographRegistrationRepository.save(dtMonographRegistration);
     }
 
+    public DtMonographRegistration updateEbookRegistrationWithoutImage(MultipartFile pdf, int reg_id, String title, String description, String reg_featured, String reg_publish, String reg_ebook, String status) throws IOException {
+
+        try {
+            byte[] bytes = pdf.getBytes();
+
+            // Creating the directory to store file
+            String rootPath = System.getProperty("catalina.home");
+            File dir = new File(rootPath + File.separator + "elibrary" + File.separator + "ebook pdf");
+            if (!dir.exists())
+                dir.mkdirs();
+
+            // Create the file on server
+            File serverFile = new File(dir.getAbsolutePath()
+                    + File.separator + pdf.getOriginalFilename());
+            BufferedOutputStream stream = new BufferedOutputStream(
+                    new FileOutputStream(serverFile));
+            stream.write(bytes);
+            stream.close();
+
+            DtMonographRegistration dtMonographRegistration = dtMonographRegistrationRepository.findByBookId(reg_id);
+            dtMonographRegistration.setReg_featured(reg_featured);
+            dtMonographRegistration.setReg_title(title);
+            dtMonographRegistration.setReg_description(description);
+            dtMonographRegistration.setReg_publish(reg_publish);
+            dtMonographRegistration.setReg_ebook(reg_ebook);
+            dtMonographRegistration.setReg_status(Integer.parseInt(status));
+            dtMonographRegistration.setReg_ebook_path(pdf.getOriginalFilename());
+
+            return dtMonographRegistrationRepository.save(dtMonographRegistration);
+        }catch (Exception e){
+            throw new RuntimeException(e);
+        }
+    }
+
     public List<LtMonographCataloging> getLtCataloging(){
         return ltMonographCatalogingRepository.findAll();
     }
 
-    public DtMonographCatalogRegistration setNewCatalog(int tag, int mono_id, String ind1, String ind2, String data){
+    public DtMonographCatalogRegistration setNewCatalog(int tag, int cat_id, int mono_id, String ind1, String ind2, String data){
+
+        if(tag == 20){
+            if(dtMonographIsbnAccRepository.findByIsbnNo(data) == null){
+                DtMonographIsbnAcc aDtMonographIsbnAcc = new DtMonographIsbnAcc();
+                aDtMonographIsbnAcc.setIsbn_no(data);
+                aDtMonographIsbnAcc.setAccession_no("dummy");
+                dtMonographIsbnAccRepository.save(aDtMonographIsbnAcc);
+            }
+
+        }
 
         DtMonographCatalogRegistration dtMonographCatalogRegistration = new DtMonographCatalogRegistration();
         dtMonographCatalogRegistration.setCatreg_tag(tag);
+        dtMonographCatalogRegistration.setCatreg_cataloging_id(cat_id);
         dtMonographCatalogRegistration.setCatreg_mono_reg_id(mono_id);
         dtMonographCatalogRegistration.setCatreg_ind1(ind1);
         dtMonographCatalogRegistration.setCatreg_ind2(ind2);
@@ -717,9 +1025,10 @@ public class LibrarianService {
 
     }
 
-    public DtMonographCatalogRegistration updateNewCatalog(int mono_id, int tag, String ind1, String ind2, String data){
+    public DtMonographCatalogRegistration updateNewCatalog(int cat_id, int mono_id, int tag, String ind1, String ind2, String data){
 
         DtMonographCatalogRegistration dtMonographCatalogRegistration = dtMonographCatalogRegistrationRepository.findByMonoIdAndTag(mono_id, tag);
+        dtMonographCatalogRegistration.setCatreg_cataloging_id(cat_id);
         dtMonographCatalogRegistration.setCatreg_ind1(ind1);
         dtMonographCatalogRegistration.setCatreg_ind2(ind2);
         dtMonographCatalogRegistration.setCatreg_data(data);
@@ -731,10 +1040,10 @@ public class LibrarianService {
     public CatalogOptionsForm  getCatalogOptions(){
 
         CatalogOptionsForm catalogOptionsForm = new CatalogOptionsForm();
-        catalogOptionsForm.setLanguage(ltMonographLanguageRepository.findAll());
+        catalogOptionsForm.setLanguage(ltMonographLanguageRepository.findAllActive());
         catalogOptionsForm.setLocation(ltMonographLocRepository.findAll());
-        catalogOptionsForm.setSubject(ltMonographSubjectRepository.findAll());
-        catalogOptionsForm.setType(ltMonographTypeRepository.findAll());
+        catalogOptionsForm.setSubject(ltMonographSubjectRepository.findAllActive());
+        catalogOptionsForm.setType(ltMonographTypeRepository.findAllActive());
         catalogOptionsForm.setAuthor(dtAuthorRepository.findAll());
         catalogOptionsForm.setPublisher(dtPublisherRepository.findAll());
 
@@ -986,6 +1295,319 @@ public class LibrarianService {
 
     public List<LtMonographCataloging> getLtMonoCat(){
         return ltMonographCatalogingRepository.findAll();
+    }
+
+    public List<String> getDistinctIsbnByCatregCatalogingId(){
+        return dtMonographCatalogRegistrationRepository.findDistinctIsbnByCatregCatalogingId();
+    }
+
+    public List<DtMonographRegistration> getAllbooksByIsbn(String isbn_num){
+        return dtMonographRegistrationRepository.findAllbooksByIsbn(isbn_num);
+    }
+
+    public List<MonographDetailsV2> getSearchBookResultV2(String category, String title){
+        if(category.equals("title")){
+            List<DtMonographCatalogRegistration> dtMonographCatalogRegistrationList = dtMonographCatalogRegistrationRepository.findByCatIdAndData(13, title);
+            List<DtMonographRegistration> book_list = new ArrayList<>();
+            List<String> isbn_list = new ArrayList<>();
+            for(int i = 0; i < dtMonographCatalogRegistrationList.size(); i++) {
+                DtMonographCatalogRegistration cat = dtMonographCatalogRegistrationList.get(i);
+                DtMonographRegistration dtMonographRegistration = dtMonographRegistrationRepository.findByBookId(cat.getCatreg_mono_reg_id());
+
+                isbn_list.add(dtMonographCatalogRegistrationRepository.findByMonoIdAndCatalogingId(dtMonographRegistration.getReg_id(), 3).getCatreg_data());
+                Set<String> set = new HashSet<>(isbn_list);
+                isbn_list.clear();
+                isbn_list.addAll(set);
+
+            }
+
+            for (int k = 0; k < isbn_list.size(); k++) {
+                int mono_id = dtMonographCatalogRegistrationRepository.findCatRegByIsbn(isbn_list.get(k)).get(0).getCatreg_mono_reg_id();
+
+
+                book_list.add(dtMonographRegistrationRepository.findByBookId(mono_id));
+            }
+
+//        List<DtMonographRegistration> book_list = librarianService.getAllBooks();
+            List<MonographDetails> book_list_details = new ArrayList<>();
+            List<MonographDetailsV2> book_list_details_v2 = new ArrayList<>();
+            for (int i = 0; i < book_list.size(); i++) {
+                DtMonographRegistration book = book_list.get(i);
+                MonographDetails book_details = getMonographDetails(book.getReg_id());
+                MonographDetailsV2 book_details_v2 = getMonographDetailsV2(book.getReg_id());
+
+                book_list_details.add(book_details);
+                book_list_details_v2.add(book_details_v2);
+            }
+            return book_list_details_v2;
+
+
+
+        }else if(category.equals("accession_no")){
+
+            List<DtMonographCatalogRegistration> dtMonographCatalogRegistrationList = dtMonographCatalogRegistrationRepository.findByCatIdAndData(20, title);
+            List<DtMonographRegistration> book_list = new ArrayList<>();
+            List<String> isbn_list = new ArrayList<>();
+            for(int i = 0; i < dtMonographCatalogRegistrationList.size(); i++) {
+                DtMonographCatalogRegistration cat = dtMonographCatalogRegistrationList.get(i);
+                DtMonographRegistration dtMonographRegistration = dtMonographRegistrationRepository.findByBookId(cat.getCatreg_mono_reg_id());
+
+                isbn_list.add(dtMonographCatalogRegistrationRepository.findByMonoIdAndCatalogingId(dtMonographRegistration.getReg_id(), 3).getCatreg_data());
+                Set<String> set = new HashSet<>(isbn_list);
+                isbn_list.clear();
+                isbn_list.addAll(set);
+
+            }
+
+            for (int k = 0; k < isbn_list.size(); k++) {
+                int mono_id = dtMonographCatalogRegistrationRepository.findCatRegByIsbn(isbn_list.get(k)).get(0).getCatreg_mono_reg_id();
+
+
+                book_list.add(dtMonographRegistrationRepository.findByBookId(mono_id));
+            }
+
+//        List<DtMonographRegistration> book_list = librarianService.getAllBooks();
+            List<MonographDetails> book_list_details = new ArrayList<>();
+            List<MonographDetailsV2> book_list_details_v2 = new ArrayList<>();
+            for (int i = 0; i < book_list.size(); i++) {
+                DtMonographRegistration book = book_list.get(i);
+                MonographDetails book_details = getMonographDetails(book.getReg_id());
+                MonographDetailsV2 book_details_v2 = getMonographDetailsV2(book.getReg_id());
+
+                book_list_details.add(book_details);
+                book_list_details_v2.add(book_details_v2);
+            }
+            return book_list_details_v2;
+
+        }else if(category.equals("author")){
+
+            List<DtMonographCatalogRegistration> dtMonographCatalogRegistrationList = dtMonographCatalogRegistrationRepository.findByCatIdAndData(9, title);
+            List<DtMonographRegistration> book_list = new ArrayList<>();
+            List<String> isbn_list = new ArrayList<>();
+            for(int i = 0; i < dtMonographCatalogRegistrationList.size(); i++) {
+                DtMonographCatalogRegistration cat = dtMonographCatalogRegistrationList.get(i);
+                DtMonographRegistration dtMonographRegistration = dtMonographRegistrationRepository.findByBookId(cat.getCatreg_mono_reg_id());
+
+                isbn_list.add(dtMonographCatalogRegistrationRepository.findByMonoIdAndCatalogingId(dtMonographRegistration.getReg_id(), 3).getCatreg_data());
+                Set<String> set = new HashSet<>(isbn_list);
+                isbn_list.clear();
+                isbn_list.addAll(set);
+
+            }
+
+            for (int k = 0; k < isbn_list.size(); k++) {
+                int mono_id = dtMonographCatalogRegistrationRepository.findCatRegByIsbn(isbn_list.get(k)).get(0).getCatreg_mono_reg_id();
+
+
+                book_list.add(dtMonographRegistrationRepository.findByBookId(mono_id));
+            }
+
+//        List<DtMonographRegistration> book_list = librarianService.getAllBooks();
+            List<MonographDetails> book_list_details = new ArrayList<>();
+            List<MonographDetailsV2> book_list_details_v2 = new ArrayList<>();
+            for (int i = 0; i < book_list.size(); i++) {
+                DtMonographRegistration book = book_list.get(i);
+                MonographDetails book_details = getMonographDetails(book.getReg_id());
+                MonographDetailsV2 book_details_v2 = getMonographDetailsV2(book.getReg_id());
+
+                book_list_details.add(book_details);
+                book_list_details_v2.add(book_details_v2);
+            }
+            return book_list_details_v2;
+
+        }else{
+
+            List<DtMonographCatalogRegistration> dtMonographCatalogRegistrationList = dtMonographCatalogRegistrationRepository.findByCatIdAndData(14, title);
+            List<DtMonographRegistration> book_list = new ArrayList<>();
+            List<String> isbn_list = new ArrayList<>();
+            for(int i = 0; i < dtMonographCatalogRegistrationList.size(); i++) {
+                DtMonographCatalogRegistration cat = dtMonographCatalogRegistrationList.get(i);
+                DtMonographRegistration dtMonographRegistration = dtMonographRegistrationRepository.findByBookId(cat.getCatreg_mono_reg_id());
+
+                isbn_list.add(dtMonographCatalogRegistrationRepository.findByMonoIdAndCatalogingId(dtMonographRegistration.getReg_id(), 3).getCatreg_data());
+                Set<String> set = new HashSet<>(isbn_list);
+                isbn_list.clear();
+                isbn_list.addAll(set);
+
+            }
+
+            for (int k = 0; k < isbn_list.size(); k++) {
+                int mono_id = dtMonographCatalogRegistrationRepository.findCatRegByIsbn(isbn_list.get(k)).get(0).getCatreg_mono_reg_id();
+
+
+                book_list.add(dtMonographRegistrationRepository.findByBookId(mono_id));
+            }
+
+//        List<DtMonographRegistration> book_list = librarianService.getAllBooks();
+            List<MonographDetails> book_list_details = new ArrayList<>();
+            List<MonographDetailsV2> book_list_details_v2 = new ArrayList<>();
+            for (int i = 0; i < book_list.size(); i++) {
+                DtMonographRegistration book = book_list.get(i);
+                MonographDetails book_details = getMonographDetails(book.getReg_id());
+                MonographDetailsV2 book_details_v2 = getMonographDetailsV2(book.getReg_id());
+
+                book_list_details.add(book_details);
+                book_list_details_v2.add(book_details_v2);
+            }
+            return book_list_details_v2;
+        }
+    }
+
+    public List<MonographDetailsV2> getAllbooksV2(){
+        List<DtMonographRegistration> book_list = new ArrayList<>();
+        List<String> isbn_list = dtMonographCatalogRegistrationRepository.findDistinctIsbnByCatregCatalogingId();
+
+        for (int k = 0; k < isbn_list.size(); k++) {
+            int mono_id = dtMonographCatalogRegistrationRepository.findCatRegByIsbn(isbn_list.get(k)).get(0).getCatreg_mono_reg_id();
+
+
+            book_list.add(dtMonographRegistrationRepository.findByBookId(mono_id));
+        }
+
+//        List<DtMonographRegistration> book_list = librarianService.getAllBooks();
+        List<MonographDetails> book_list_details = new ArrayList<>();
+        List<MonographDetailsV2> book_list_details_v2 = new ArrayList<>();
+        for (int i = 0; i < book_list.size(); i++) {
+            DtMonographRegistration book = book_list.get(i);
+            MonographDetails book_details = getMonographDetails(book.getReg_id());
+            MonographDetailsV2 book_details_v2 = getMonographDetailsV2(book.getReg_id());
+
+            book_list_details.add(book_details);
+            book_list_details_v2.add(book_details_v2);
+        }
+        return book_list_details_v2;
+    }
+    
+    public List<CopyBookDetails> getAllCopyBookDetails(String isbn_no){
+        try {
+            List<CopyBookDetails> copyBookList = new ArrayList<>();
+            List<DtMonographCatalogRegistration> catRegIsbn = dtMonographCatalogRegistrationRepository.findCatRegByIsbn(isbn_no);
+            
+            for(int i = 0; i<catRegIsbn.size(); i++){
+                DtMonographCatalogRegistration aCatRegIsbn = catRegIsbn.get(i);
+                List<DtMonographCatalogRegistration> catBookDetails = dtMonographCatalogRegistrationRepository.findByMonoId(aCatRegIsbn.getCatreg_mono_reg_id());
+
+                CopyBookDetails copyBook = new CopyBookDetails();
+
+                //Assign booking details
+                DtMonographBooking latestBooking = new DtMonographBooking();
+                latestBooking.setBookingId(0);
+                for(int j = 0; j<dtMonographBookingRepository.findByMonoId(aCatRegIsbn.getCatreg_mono_reg_id()).size(); j++){
+                    if(dtMonographBookingRepository.findByMonoId(aCatRegIsbn.getCatreg_mono_reg_id()).get(j).getBookingId() > latestBooking.getBookingId()){
+                        latestBooking = dtMonographBookingRepository.findByMonoId(aCatRegIsbn.getCatreg_mono_reg_id()).get(j);
+                    }
+                }
+                if(latestBooking.getBookingId() != 0){
+                    copyBook.setDtMonographBooking(latestBooking);
+                }else{
+                    copyBook.setDtMonographBooking(null);
+                }
+
+                //Assign History Status
+                DtMonographHistoryStatus latestHistory = new DtMonographHistoryStatus();
+                latestHistory.setHistory_id(0);
+                for(int l = 0; l<dtMonographHistoryStatusRepository.findByMonoId(aCatRegIsbn.getCatreg_mono_reg_id()).size(); l++){
+                    if(dtMonographHistoryStatusRepository.findByMonoId(aCatRegIsbn.getCatreg_mono_reg_id()).get(l).getHistory_id() > latestHistory.getHistory_id()){
+                        latestHistory = dtMonographHistoryStatusRepository.findByMonoId(aCatRegIsbn.getCatreg_mono_reg_id()).get(l);
+                    }
+                }
+                if(latestHistory.getHistory_id() != 0){
+                    copyBook.setDtMonographHistoryStatus(latestHistory);
+                }else {
+                    copyBook.setDtMonographHistoryStatus(null);
+                }
+
+                //Assign accession number
+                for (int k = 0; k<catBookDetails.size(); k++){
+                    DtMonographCatalogRegistration aCatBookDetails = catBookDetails.get(k);
+                    if(aCatBookDetails.getCatreg_cataloging_id() == 20){
+                        copyBook.setAccession_no(aCatBookDetails.getCatreg_data());
+                    }
+                }
+
+                //Assign mono reg
+                copyBook.setDtMonographRegistration(dtMonographRegistrationRepository.findByBookId(aCatRegIsbn.getCatreg_mono_reg_id()));
+
+                //Assign Status
+                if(copyBook.getDtMonographBooking() != null && copyBook.getDtMonographHistoryStatus() != null){
+                    if(copyBook.getDtMonographBooking().getBookingStatus() != 2 && copyBook.getDtMonographHistoryStatus().getHistory_status() != 1){
+                        copyBook.setStatus("Available");
+                    }
+                    if(copyBook.getDtMonographBooking().getBookingStatus() == 2){
+                        copyBook.setStatus("Reserved");
+                    }
+                    if(copyBook.getDtMonographHistoryStatus().getHistory_status() == 1){
+                        copyBook.setStatus("Borrowed");
+                    }
+                }else if(copyBook.getDtMonographBooking() != null || copyBook.getDtMonographHistoryStatus() != null){
+                    if(copyBook.getDtMonographBooking() != null ){
+                        if(copyBook.getDtMonographBooking().getBookingStatus() == 2){
+                            copyBook.setStatus("Reserved");
+                        }else{
+                            copyBook.setStatus("Available");
+                        }
+                    }
+                    if(copyBook.getDtMonographHistoryStatus() != null){
+                        if(copyBook.getDtMonographHistoryStatus().getHistory_status() == 1){
+                            copyBook.setStatus("Borrowed");
+                        }else{
+                            copyBook.setStatus("Available");
+                        }
+                    }
+                }else{
+                    copyBook.setStatus("Available");
+                }
+
+                copyBookList.add(copyBook);
+            }
+            
+            return copyBookList;
+        }catch (Exception e){
+            throw new RuntimeException(e);
+        }
+    }
+
+    public MonographDetailsV2 getMonographDetailsV2(int mono_id){
+        DtMonographRegistration dtMonographRegistration = dtMonographRegistrationRepository.findByBookId(mono_id);
+        List<DtMonographCatalogRegistration> dtMonographCatalogRegistration = dtMonographCatalogRegistrationRepository.findByMonoId(dtMonographRegistration.getReg_id());
+
+        MonographDetailsV2 monographDetailsV2 = new MonographDetailsV2();
+        monographDetailsV2.setMonograph(dtMonographRegistration);
+        monographDetailsV2.setCatalog(dtMonographCatalogRegistration);
+
+        String isbn = "";
+        for(int i = 0; i<dtMonographCatalogRegistration.size(); i++){
+            DtMonographCatalogRegistration aDtMonographCatalogRegistration = dtMonographCatalogRegistration.get(i);
+            if(aDtMonographCatalogRegistration.getCatreg_cataloging_id() == 13){
+                monographDetailsV2.setTitle(aDtMonographCatalogRegistration.getCatreg_data());
+            }
+            if(aDtMonographCatalogRegistration.getCatreg_cataloging_id() == 9){
+                monographDetailsV2.setAuthor(aDtMonographCatalogRegistration.getCatreg_data());
+            }
+            if(aDtMonographCatalogRegistration.getCatreg_cataloging_id() == 14){
+                monographDetailsV2.setPublisher(aDtMonographCatalogRegistration.getCatreg_data());
+            }
+            if(aDtMonographCatalogRegistration.getCatreg_cataloging_id() == 7){
+                monographDetailsV2.setCall_no(aDtMonographCatalogRegistration.getCatreg_data());
+            }
+            if(aDtMonographCatalogRegistration.getCatreg_cataloging_id() == 21){
+                monographDetailsV2.setType(aDtMonographCatalogRegistration.getCatreg_data());
+            }
+            if(aDtMonographCatalogRegistration.getCatreg_cataloging_id() == 3){
+                monographDetailsV2.setIsbn_no(aDtMonographCatalogRegistration.getCatreg_data());
+                isbn = aDtMonographCatalogRegistration.getCatreg_data();
+            }
+        }
+
+        monographDetailsV2.setCopy(dtMonographCatalogRegistrationRepository.findCatRegByIsbn(isbn).size());
+
+
+
+        return monographDetailsV2;
+    }
+
+    public int getMonoIdByAccessionNo(String accession_number){
+        return dtMonographCatalogRegistrationRepository.findMonoIdByAccNum(accession_number).getCatreg_mono_reg_id();
     }
 
 }

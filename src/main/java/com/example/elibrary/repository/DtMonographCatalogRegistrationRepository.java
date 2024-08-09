@@ -34,4 +34,20 @@ public interface DtMonographCatalogRegistrationRepository extends JpaRepository<
 
     @Query("SELECT b FROM DtMonographCatalogRegistration b WHERE b.catreg_tag= 14 AND b.catreg_data LIKE '%hamid%'")
     List<DtMonographCatalogRegistration> findByTagAndDataTest();
+
+    @Query("SELECT DISTINCT b.catreg_data FROM DtMonographCatalogRegistration b WHERE b.catreg_cataloging_id = 3")
+    List<String> findDistinctIsbnByCatregCatalogingId();
+
+    @Query("SELECT b FROM DtMonographCatalogRegistration b WHERE b.catreg_cataloging_id = 3 and b.catreg_data= :isbn_num")
+    List<DtMonographCatalogRegistration> findCatRegByIsbn(@Param("isbn_num") String isbn_num);
+
+    @Query("SELECT b FROM DtMonographCatalogRegistration b WHERE b.catreg_mono_reg_id= :mono_id AND b.catreg_cataloging_id= :catreg_cataloging_id")
+    DtMonographCatalogRegistration findByMonoIdAndCatalogingId(@Param("mono_id") int mono_id, @Param("catreg_cataloging_id") int catreg_cataloging_id);
+
+    @Query("SELECT b FROM DtMonographCatalogRegistration b WHERE b.catreg_cataloging_id= 20 AND b.catreg_data= :catreg_data")
+    DtMonographCatalogRegistration findMonoIdByAccNum(@Param("catreg_data") String catreg_data);
+
+    @Query("SELECT b FROM DtMonographCatalogRegistration b WHERE b.catreg_cataloging_id= :cataloging_id AND b.catreg_data LIKE %:catreg_data%")
+    List<DtMonographCatalogRegistration> findByCatIdAndData(@Param("cataloging_id") int cataloging_id, @Param("catreg_data") String catreg_data);
+
 }

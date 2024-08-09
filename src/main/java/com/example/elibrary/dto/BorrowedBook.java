@@ -16,10 +16,12 @@ public class BorrowedBook {
     private Date extend_date;
     private String status_extend;
     private String status_book;
+    private String status_remark;
+    private String accession_no;
 
     public BorrowedBook(){}
 
-    public BorrowedBook(int book_id, int history_id, String book_title, int copy, int borrower_id, String borrower, Date date_borrowed, Date est_date_to_return, Date act_date_return, Date extend_date, String status_extend, String status_book) {
+    public BorrowedBook(int book_id, int history_id, String book_title, int copy, int borrower_id, String borrower, Date date_borrowed, Date est_date_to_return, Date act_date_return, Date extend_date, String status_extend, String status_book, String status_remark, String accession_no) {
         this.book_id = book_id;
         this.history_id = history_id;
         this.book_title = book_title;
@@ -32,6 +34,24 @@ public class BorrowedBook {
         this.extend_date = extend_date;
         this.status_extend = status_extend;
         this.status_book = status_book;
+        this.status_remark = status_remark;
+        this.accession_no = accession_no;
+    }
+
+    public String getAccession_no() {
+        return accession_no;
+    }
+
+    public void setAccession_no(String accession_no) {
+        this.accession_no = accession_no;
+    }
+
+    public String getStatus_remark() {
+        return status_remark;
+    }
+
+    public void setStatus_remark(String status_remark) {
+        this.status_remark = status_remark;
     }
 
     public int getBorrower_id() {

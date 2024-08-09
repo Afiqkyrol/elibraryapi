@@ -1,5 +1,6 @@
 package com.example.elibrary.controller;
 
+import com.example.elibrary.entity.DtMonographRegistration;
 import com.example.elibrary.repository.DtMonographRegistrationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -37,6 +38,42 @@ public class Controller {
             resource = new UrlResource(filePath.toUri());
         } catch (IOException e) {
             throw new RuntimeException("File not found: " + image_name);
+        }
+
+        // Determine the file's MIME type
+        String contentType;
+        try {
+            contentType = Files.probeContentType(filePath);
+        } catch (IOException e) {
+            contentType = "application/octet-stream";
+        }
+
+        // Set content disposition
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"");
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(contentType))
+                .headers(headers)
+                .body(resource);
+    }
+
+    @GetMapping("/public/ebook/pdf/{mono_id}")
+    public ResponseEntity<Resource> getEbookPdf(@PathVariable int mono_id){
+        String pdf_name =  dtMonographRegistrationRepository.findEbookById(mono_id);
+        DtMonographRegistration dtMonographRegistration = dtMonographRegistrationRepository.findByBookId(mono_id);
+        dtMonographRegistration.setReg_download_count(dtMonographRegistration.getReg_download_count()+1);
+        dtMonographRegistrationRepository.save(dtMonographRegistration);
+
+        String rootPath = System.getProperty("catalina.home");
+        rootPath = rootPath + "/elibrary/ebook pdf";
+        // Resolve file path within Tomcat's file system
+        Path filePath = Paths.get(rootPath).resolve(pdf_name);
+        Resource resource;
+        try {
+            resource = new UrlResource(filePath.toUri());
+        } catch (IOException e) {
+            throw new RuntimeException("File not found: " + pdf_name);
         }
 
         // Determine the file's MIME type

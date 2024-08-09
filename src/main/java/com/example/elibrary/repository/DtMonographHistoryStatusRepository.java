@@ -33,5 +33,11 @@ public interface DtMonographHistoryStatusRepository extends JpaRepository<DtMono
     @Query("SELECT b FROM DtMonographHistoryStatus b WHERE b.history_status=1 OR b.history_status=2")
     List<DtMonographHistoryStatus> findByWithUserOrCompletedHistoryStatus();
 
+    @Query("SELECT b FROM DtMonographHistoryStatus b WHERE (b.history_status=1 OR b.history_status=2) AND b.history_mono_id= :mono_id")
+    List<DtMonographHistoryStatus> findByWithUserOrCompletedHistoryStatusAndMonoId(@Param("mono_id") int mono_id);
+
+    @Query("SELECT b FROM DtMonographHistoryStatus b WHERE b.history_mono_id= :mono_id")
+    List<DtMonographHistoryStatus> findByMonoId(@Param("mono_id") int mono_id);
+
 
 }

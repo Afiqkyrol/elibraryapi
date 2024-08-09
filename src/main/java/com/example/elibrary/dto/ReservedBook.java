@@ -11,10 +11,12 @@ public class ReservedBook {
     private String user_name;
     private String date_reserved;
     private String status;
+    private String booking_remarks;
+    private String accession_no;
 
     public  ReservedBook(){}
 
-    public ReservedBook(int reserve_id, int book_id, String book_title, int copy, int user_id, int library_id, String user_name, String date_reserved, String status) {
+    public ReservedBook(int reserve_id, int book_id, String book_title, int copy, int user_id, int library_id, String user_name, String date_reserved, String status, String booking_remarks, String accession_no) {
         this.reserve_id = reserve_id;
         this.book_id = book_id;
         this.book_title = book_title;
@@ -24,6 +26,24 @@ public class ReservedBook {
         this.user_name = user_name;
         this.date_reserved = date_reserved;
         this.status = status;
+        this.booking_remarks = booking_remarks;
+        this.accession_no = accession_no;
+    }
+
+    public String getAccession_no() {
+        return accession_no;
+    }
+
+    public void setAccession_no(String accession_no) {
+        this.accession_no = accession_no;
+    }
+
+    public String getBooking_remarks() {
+        return booking_remarks;
+    }
+
+    public void setBooking_remarks(String booking_remarks) {
+        this.booking_remarks = booking_remarks;
     }
 
     public int getCopy() {

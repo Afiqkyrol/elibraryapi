@@ -27,6 +27,18 @@ public interface DtMonographRegistrationRepository extends JpaRepository<DtMonog
     @Query("SELECT b FROM DtMonographRegistration b WHERE b.reg_featured= 'yes'")
     List<DtMonographRegistration> findRegFeatured();
 
+    @Query("SELECT b FROM DtMonographRegistration b WHERE b.reg_ebook= 'no'")
+    List<DtMonographRegistration> findAllbooks();
+
+    @Query("SELECT b FROM DtMonographRegistration b WHERE b.reg_ebook= 'no' and b.reg_ISBN= :isbn_num")
+    List<DtMonographRegistration> findAllbooksByIsbn(@Param("isbn_num") String isbn_num);
+
+    @Query("SELECT b FROM DtMonographRegistration b WHERE b.reg_ebook= 'yes'")
+    List<DtMonographRegistration> findAllEbooks();
+
     @Query("SELECT reg_image_link FROM DtMonographRegistration b WHERE b.reg_id= :mono_id")
     String findImageById(@Param("mono_id") int mono_id);
+
+    @Query("SELECT reg_ebook_path FROM DtMonographRegistration b WHERE b.reg_id= :mono_id")
+    String findEbookById(@Param("mono_id") int mono_id);
 }

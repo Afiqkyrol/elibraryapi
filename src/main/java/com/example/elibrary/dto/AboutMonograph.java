@@ -1,5 +1,6 @@
 package com.example.elibrary.dto;
 
+import com.example.elibrary.entity.DtMonographRegistration;
 import jakarta.persistence.Column;
 
 public class AboutMonograph {
@@ -28,9 +29,11 @@ public class AboutMonograph {
 
     private String quantity;
 
+    private DtMonographRegistration dtMonographRegistration;
+
     public AboutMonograph(){}
 
-    public AboutMonograph(int book_id, String call_no, String author, String title, String book_description, String image_name, String book_type, String publisher, String item_number, String status, int copy, String quantity) {
+    public AboutMonograph(int book_id, String call_no, String author, String title, String book_description, String image_name, String book_type, String publisher, String item_number, String status, int copy, String quantity, DtMonographRegistration dtMonographRegistration) {
         this.book_id = book_id;
         this.call_no = call_no;
         this.author = author;
@@ -43,6 +46,15 @@ public class AboutMonograph {
         this.status = status;
         this.copy = copy;
         this.quantity = quantity;
+        this.dtMonographRegistration = dtMonographRegistration;
+    }
+
+    public DtMonographRegistration getDtMonographRegistration() {
+        return dtMonographRegistration;
+    }
+
+    public void setDtMonographRegistration(DtMonographRegistration dtMonographRegistration) {
+        this.dtMonographRegistration = dtMonographRegistration;
     }
 
     public String getImage_name() {

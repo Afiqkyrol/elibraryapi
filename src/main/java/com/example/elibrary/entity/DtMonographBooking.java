@@ -31,15 +31,27 @@ public class DtMonographBooking {
     @Column(name = "booking_created_date")
     private Date bookingCreatedDate;
 
+    @Column(name = "booking_remarks")
+    private String bookingRemarks;
+
     public DtMonographBooking(){}
 
-    public DtMonographBooking(int bookingMonoId, int bookingUserId, int bookingLibrarianId, Date bookingDate, int bookingStatus, Date bookingCreatedDate) {
+    public DtMonographBooking(int bookingMonoId, int bookingUserId, int bookingLibrarianId, Date bookingDate, int bookingStatus, Date bookingCreatedDate, String bookingRemarks) {
         this.bookingMonoId = bookingMonoId;
         this.bookingUserId = bookingUserId;
         this.bookingLibrarianId = bookingLibrarianId;
         this.bookingDate = bookingDate;
         this.bookingStatus = bookingStatus;
         this.bookingCreatedDate = bookingCreatedDate;
+        this.bookingRemarks = bookingRemarks;
+    }
+
+    public String getBookingRemarks() {
+        return bookingRemarks;
+    }
+
+    public void setBookingRemarks(String bookingRemarks) {
+        this.bookingRemarks = bookingRemarks;
     }
 
     public int getBookingId() {

@@ -61,6 +61,18 @@ public class PatronController {
         return book_list_details;
     }
 
+    @GetMapping("/patron/ebook-list-details")
+    public List<MonographDetails> getAllEBooksDetails(){
+        List<DtMonographRegistration> book_list = patronService.getAllEBooks();
+        List<MonographDetails> book_list_details = new ArrayList<>();
+        for(int i = 0; i<book_list.size(); i++){
+            DtMonographRegistration book = book_list.get(i);
+            MonographDetails book_details = patronService.getMonographDetails(book.getReg_id());
+            book_list_details.add(book_details);
+        }
+        return book_list_details;
+    }
+
     @CrossOrigin(origins = "http://localhost:3000")
     @PostMapping("/patron/book-list/search-books")
     public List<MonographDetails> getSearchBookResult(@RequestParam("search_by") String search_by, @RequestParam("title") String title,
@@ -112,6 +124,22 @@ public class PatronController {
     public List<ReservedBook> getStatusBook(@PathVariable int reg_id){
         return patronService.getReservationListActive(reg_id);
     }
+
+    @CrossOrigin(origins = "http://localhost:3000")
+    @GetMapping("/patron/reservation/{reserve_id}")
+    public ReservedBook getReservation(@PathVariable int reserve_id){
+        return patronService.getReservedBook(reserve_id);
+    }
+
+//    @CrossOrigin(origins = "http://localhost:3000")
+//    @GetMapping("/patron/reservation-list/{reserve_id}/test")
+//    public String getReservationtest(@PathVariable int reserve_id){
+//        try{
+//            return patronService.getReservedBook(reserve_id).toString();
+//        }catch (Exception e){
+//            return e.toString();
+//        }
+//    }
 
     @CrossOrigin(origins = "http://localhost:3000")
     @GetMapping("/patron/status-borrow/{reg_id}")
@@ -194,5 +222,44 @@ public class PatronController {
     @GetMapping("/patron/min-extend-date/{reserve_id}")
     public DateExclude getMinExtendDate(@PathVariable int reserve_id){
         return patronService.getAvailableExtendDate(reserve_id);
+    }
+
+    @CrossOrigin(origins = "http://localhost:3000")
+    @GetMapping("/patron/book-list-details-v2")
+    public List<MonographDetailsV2> getAllBooksDetailsV2(){
+        try {
+            return patronService.getAllbooksV2();
+        }catch (Exception e){
+            throw new RuntimeException(e);
+        }
+    }
+
+    @CrossOrigin(origins = "http://localhost:3000")
+    @PostMapping("/patron/book-list/search-books-v2")
+    public List<MonographDetailsV2> getSearchBookResultV2(@RequestParam("category") String category, @RequestParam("title") String title){
+
+        return patronService.getSearchBookResultV2(category, title);
+    }
+
+    @CrossOrigin(origins = "http://localhost:3000")
+    @GetMapping("/patron/book-list-details-v2/{isbn_no}")
+    public List<CopyBookDetails> getAllBooksDetailsCopyV2(@PathVariable("isbn_no") String isbn_no){
+        try {
+            return patronService.getAllCopyBookDetails(isbn_no);
+        }catch (Exception e){
+            throw new RuntimeException(e);
+        }
+    }
+
+    @PostMapping("/patron/ebook-list-details/search-ebook")
+    public List<MonographDetails> getAllEBooksDetails(@RequestParam("category") String category, @RequestParam("title") String title){
+        List<DtMonographRegistration> book_list = patronService.getAllEBooksSearchResult(category, title);
+        List<MonographDetails> book_list_details = new ArrayList<>();
+        for(int i = 0; i<book_list.size(); i++){
+            DtMonographRegistration book = book_list.get(i);
+            MonographDetails book_details = patronService.getMonographDetails(book.getReg_id());
+            book_list_details.add(book_details);
+        }
+        return book_list_details;
     }
 }

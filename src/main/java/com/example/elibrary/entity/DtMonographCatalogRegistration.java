@@ -13,6 +13,9 @@ public class DtMonographCatalogRegistration {
     @Column(name = "catreg_id")
     private int catreg_id;
 
+    @Column(name = "catreg_cataloging_id")
+    private int catreg_cataloging_id;
+
     @Column(name = "catreg_mono_reg_id")
     private int catreg_mono_reg_id;
 
@@ -33,13 +36,22 @@ public class DtMonographCatalogRegistration {
 
     public DtMonographCatalogRegistration(){}
 
-    public DtMonographCatalogRegistration(int catreg_mono_reg_id, int catreg_tag, String catreg_ind1, String catreg_ind2, String catreg_data, Date catreg_created_date) {
+    public DtMonographCatalogRegistration(int catreg_cataloging_id, int catreg_mono_reg_id, int catreg_tag, String catreg_ind1, String catreg_ind2, String catreg_data, Date catreg_created_date) {
+        this.catreg_cataloging_id = catreg_cataloging_id;
         this.catreg_mono_reg_id = catreg_mono_reg_id;
         this.catreg_tag = catreg_tag;
         this.catreg_ind1 = catreg_ind1;
         this.catreg_ind2 = catreg_ind2;
         this.catreg_data = catreg_data;
         this.catreg_created_date = catreg_created_date;
+    }
+
+    public int getCatreg_cataloging_id() {
+        return catreg_cataloging_id;
+    }
+
+    public void setCatreg_cataloging_id(int catreg_cataloging_id) {
+        this.catreg_cataloging_id = catreg_cataloging_id;
     }
 
     public int getCatreg_id() {
