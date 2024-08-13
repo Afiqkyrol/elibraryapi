@@ -266,20 +266,18 @@ public class LibrarianService {
         dto.setDtMonographRegistration(book_details);
 
         for(int i = 0; i<dtMonographCatalogRegistrations.size(); i++){
-            if(dtMonographCatalogRegistrations.get(i).getCatreg_tag() == 7){
+            if(dtMonographCatalogRegistrations.get(i).getCatreg_cataloging_id() == 7){
                 dto.setCall_no(dtMonographCatalogRegistrations.get(i).getCatreg_data());
-            }else if(Objects.equals(dtMonographCatalogRegistrations.get(i).getCatreg_tag(), 11)){
+            }else if(Objects.equals(dtMonographCatalogRegistrations.get(i).getCatreg_cataloging_id(), 9)){
                 dto.setAuthor(dtMonographCatalogRegistrations.get(i).getCatreg_data());
-            }else if(Objects.equals(dtMonographCatalogRegistrations.get(i).getCatreg_tag(), 26)){
-                dto.setItem_number(dtMonographCatalogRegistrations.get(i).getCatreg_data());
-            }else if(Objects.equals(dtMonographCatalogRegistrations.get(i).getCatreg_tag(), 12)) {
-                dto.setCopy(Integer.valueOf(dtMonographCatalogRegistrations.get(i).getCatreg_data()));
-            }else if(Objects.equals(dtMonographCatalogRegistrations.get(i).getCatreg_tag(), 13)){
+            }else if(Objects.equals(dtMonographCatalogRegistrations.get(i).getCatreg_cataloging_id(), 13)){
                 dto.setTitle(dtMonographCatalogRegistrations.get(i).getCatreg_data());
-            }else if(Objects.equals(dtMonographCatalogRegistrations.get(i).getCatreg_tag(), 14)){
+            }else if(Objects.equals(dtMonographCatalogRegistrations.get(i).getCatreg_cataloging_id(), 14)){
                 dto.setPublisher(dtMonographCatalogRegistrations.get(i).getCatreg_data());
-            }else if(Objects.equals(dtMonographCatalogRegistrations.get(i).getCatreg_tag(), 21)){
+            }else if(Objects.equals(dtMonographCatalogRegistrations.get(i).getCatreg_cataloging_id(), 21)){
                 dto.setBook_type(dtMonographCatalogRegistrations.get(i).getCatreg_data());
+            }else if(Objects.equals(dtMonographCatalogRegistrations.get(i).getCatreg_cataloging_id(), 20)){
+                dto.setAccession_no(dtMonographCatalogRegistrations.get(i).getCatreg_data());
             }
         }
         dto.setBook_description(book_details.getReg_description());
@@ -1460,8 +1458,9 @@ public class LibrarianService {
         for (int k = 0; k < isbn_list.size(); k++) {
             int mono_id = dtMonographCatalogRegistrationRepository.findCatRegByIsbn(isbn_list.get(k)).get(0).getCatreg_mono_reg_id();
 
-
-            book_list.add(dtMonographRegistrationRepository.findByBookId(mono_id));
+            if(!dtMonographRegistrationRepository.findByBookId(mono_id).getReg_ebook().equals("yes")) {
+                book_list.add(dtMonographRegistrationRepository.findByBookId(mono_id));
+            }
         }
 
 //        List<DtMonographRegistration> book_list = librarianService.getAllBooks();

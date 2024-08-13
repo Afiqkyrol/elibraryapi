@@ -29,11 +29,13 @@ public class AboutMonograph {
 
     private String quantity;
 
+    private String accession_no;
+
     private DtMonographRegistration dtMonographRegistration;
 
     public AboutMonograph(){}
 
-    public AboutMonograph(int book_id, String call_no, String author, String title, String book_description, String image_name, String book_type, String publisher, String item_number, String status, int copy, String quantity, DtMonographRegistration dtMonographRegistration) {
+    public AboutMonograph(int book_id, String call_no, String author, String title, String book_description, String image_name, String book_type, String publisher, String item_number, String status, int copy, String quantity, String accession_no, DtMonographRegistration dtMonographRegistration) {
         this.book_id = book_id;
         this.call_no = call_no;
         this.author = author;
@@ -46,7 +48,16 @@ public class AboutMonograph {
         this.status = status;
         this.copy = copy;
         this.quantity = quantity;
+        this.accession_no = accession_no;
         this.dtMonographRegistration = dtMonographRegistration;
+    }
+
+    public String getAccession_no() {
+        return accession_no;
+    }
+
+    public void setAccession_no(String accession_no) {
+        this.accession_no = accession_no;
     }
 
     public DtMonographRegistration getDtMonographRegistration() {

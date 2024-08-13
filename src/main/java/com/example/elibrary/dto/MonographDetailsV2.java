@@ -19,6 +19,8 @@ public class MonographDetailsV2 {
 
     private String type;
 
+    private String accession_no;
+
     private int copy;
 
     private List<DtMonographCatalogRegistration> catalog;
@@ -27,16 +29,25 @@ public class MonographDetailsV2 {
 
     public MonographDetailsV2(){}
 
-    public MonographDetailsV2(String title, String author, String publisher, String call_no, String isbn_no, String type, int copy, List<DtMonographCatalogRegistration> catalog, DtMonographRegistration monograph) {
+    public MonographDetailsV2(String title, String author, String publisher, String call_no, String isbn_no, String type, String accession_no, int copy, List<DtMonographCatalogRegistration> catalog, DtMonographRegistration monograph) {
         this.title = title;
         this.author = author;
         this.publisher = publisher;
         this.call_no = call_no;
         this.isbn_no = isbn_no;
         this.type = type;
+        this.accession_no = accession_no;
         this.copy = copy;
         this.catalog = catalog;
         this.monograph = monograph;
+    }
+
+    public String getAccession_no() {
+        return accession_no;
+    }
+
+    public void setAccession_no(String accession_no) {
+        this.accession_no = accession_no;
     }
 
     public String getIsbn_no() {

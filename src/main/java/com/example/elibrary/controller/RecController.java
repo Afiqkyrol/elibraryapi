@@ -52,7 +52,7 @@ public class RecController {
     @GetMapping("/public/barcode/{barcode}")
     public ResponseEntity<?> downloadPdf(@PathVariable String barcode) {
         try {
-            ByteArrayInputStream bis = pdfService.generatePdfWithImage("https://barcode.tec-it.com/barcode.ashx?data="+barcode+"&code=ISBN13&translate-esc=on");
+            ByteArrayInputStream bis = pdfService.generatePdfWithImage("https://barcode.tec-it.com/barcode.ashx?data="+barcode+"&code=Code128&translate-esc=on");
 
             HttpHeaders headers = new HttpHeaders();
             headers.add("Content-Disposition", "inline; filename=download.pdf");
