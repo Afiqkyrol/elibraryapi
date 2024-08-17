@@ -160,6 +160,13 @@ public class LibrarianController {
     }
 
     @CrossOrigin(origins = "http://localhost:3000")
+    @PostMapping("/librarian/book-list/search-ebooks-v2")
+    public List<MonographDetailsV2> getSearchEbookResultV2(@RequestParam("category") String category, @RequestParam("title") String title){
+
+        return librarianService.getSearchEbookResultV2(category, title);
+    }
+
+    @CrossOrigin(origins = "http://localhost:3000")
     @GetMapping("/librarian/book-list/{reg_id}")
     public AboutMonograph getMonographAbout(@PathVariable int reg_id){
         return librarianService.getMonographAbout(reg_id);
@@ -211,6 +218,12 @@ public class LibrarianController {
     @GetMapping("/librarian/reservation-list")
     public List<ReservedBook> getReservationList(){
         return librarianService.getReservationList();
+    }
+
+    @CrossOrigin(origins = "http://localhost:3000")
+    @GetMapping("/librarian/dashboard/reservation-list")
+    public List<DtMonographBooking> getDashboardReservationList(){
+        return librarianService.getReservationListPendingOrCompleted();
     }
 
     @CrossOrigin(origins = "http://localhost:3000")
@@ -269,6 +282,12 @@ public class LibrarianController {
     @GetMapping("/librarian/extend-list")
     public List<BorrowedBook> getHistoryListByTrueExtend(){
         return librarianService.getHistoryListByTrueExtend();
+    }
+
+    @CrossOrigin(origins = "http://localhost:3000")
+    @GetMapping("/librarian/dashboard/extend-list")
+    public List<DtMonographHistoryStatus> getHistoryListByTrueExtendPendingStatus(){
+        return librarianService.getHistoryListByTrueExtendPendingStatus();
     }
 
     @CrossOrigin(origins = "http://localhost:3000")
@@ -403,6 +422,27 @@ public class LibrarianController {
                                                    @RequestParam("status") String status){
 
         return librarianService.setEbookRegistration(file, pdf, title, description, reg_featured, reg_publish, reg_ebook, reg_by, status);
+
+    }
+
+    @CrossOrigin(origins = "http://localhost:3000")
+    @PostMapping("/librarian/ebook-list/add/test")
+    public String setNewEbookTest(@RequestParam("file") MultipartFile file,
+                                               @RequestParam("pdf") MultipartFile pdf,
+                                               @RequestParam("title") String title,
+                                               @RequestParam("description") String description,
+                                               @RequestParam("reg_featured") String reg_featured,
+                                               @RequestParam("reg_publish") String reg_publish,
+                                               @RequestParam("reg_ebook") String reg_ebook,
+                                               @RequestParam("reg_by") String reg_by,
+                                               @RequestParam("status") String status){
+
+        try{
+            librarianService.setEbookRegistration(file, pdf, title, description, reg_featured, reg_publish, reg_ebook, reg_by, status);
+            return "success";
+        }catch(Exception e){
+            return e.toString();
+        }
 
     }
 

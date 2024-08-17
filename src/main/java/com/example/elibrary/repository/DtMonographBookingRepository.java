@@ -16,10 +16,16 @@ public interface DtMonographBookingRepository extends JpaRepository<DtMonographB
     @Query("SELECT b FROM DtMonographBooking b WHERE b.bookingUserId= :user_id")
     List<DtMonographBooking> findByUserId(@Param("user_id") int user_id);
 
+    @Query("SELECT b FROM DtMonographBooking b WHERE b.bookingUserId= :user_id AND (b.bookingStatus=1 OR b.bookingStatus=2)")
+    List<DtMonographBooking> findByUserIdAndStatus(@Param("user_id") int user_id);
+
     @Query("SELECT b FROM DtMonographBooking b WHERE b.bookingId= :reserve_id")
     DtMonographBooking findByReserveId(@Param("reserve_id") int reserve_id);
 
     @Query("SELECT b FROM DtMonographBooking b WHERE b.bookingMonoId= :mono_id")
     List<DtMonographBooking> findByMonoId(@Param("mono_id") int mono_id);
+
+    @Query("SELECT b FROM DtMonographBooking b WHERE b.bookingStatus=1 OR b.bookingStatus=2")
+    List<DtMonographBooking> findPendingOrCompletedBookingStatus();
 
 }

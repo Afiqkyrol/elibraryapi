@@ -242,6 +242,13 @@ public class PatronController {
     }
 
     @CrossOrigin(origins = "http://localhost:3000")
+    @PostMapping("/patron/book-list/search-ebooks-v2")
+    public List<MonographDetailsV2> getSearchEbookResultV2(@RequestParam("category") String category, @RequestParam("title") String title){
+
+        return patronService.getSearchEbookResultV2(category, title);
+    }
+
+    @CrossOrigin(origins = "http://localhost:3000")
     @GetMapping("/patron/book-list-details-v2/{isbn_no}")
     public List<CopyBookDetails> getAllBooksDetailsCopyV2(@PathVariable("isbn_no") String isbn_no){
         try {

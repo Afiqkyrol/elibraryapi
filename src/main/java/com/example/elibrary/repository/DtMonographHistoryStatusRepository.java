@@ -30,6 +30,9 @@ public interface DtMonographHistoryStatusRepository extends JpaRepository<DtMono
     @Query("SELECT b FROM DtMonographHistoryStatus b WHERE b.extend=true AND b.history_status=1")
     List<DtMonographHistoryStatus> findByTrueExtend();
 
+    @Query("SELECT b FROM DtMonographHistoryStatus b WHERE b.extend=true AND b.history_status=1 AND b.extend_status='pending'")
+    List<DtMonographHistoryStatus> findByTrueExtendAndPendingStatus();
+
     @Query("SELECT b FROM DtMonographHistoryStatus b WHERE b.history_status=1 OR b.history_status=2")
     List<DtMonographHistoryStatus> findByWithUserOrCompletedHistoryStatus();
 
